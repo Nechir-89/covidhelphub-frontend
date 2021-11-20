@@ -19,14 +19,14 @@ function VolunteerFormComponent() {
     };
   };
 
-  const { form: formSections, initialValues, schema } = getData();
+  const { form, initialValues, schema } = getData();
 
   return (
     <>
       <h1>Volunteer Application Form</h1>
       <p>Thank you for your interest in volunteering for us! Please fill out our volunteer form so we can start matching you with tasks.</p>
       <FormikComponent
-        formSections={formSections}
+        formFields={form}
         initialValues={initialValues}
         schema={schema}
       />

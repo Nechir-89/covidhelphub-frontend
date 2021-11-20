@@ -5,18 +5,19 @@ import { useHistory } from "react-router-dom";
 import Style from "./formikStyle.module.css";
 import FieldComponent from "./fieldComponents/FieldComponent";
 import { Formik, Form } from "formik";
-import { FormSection } from "./types";
-
+import { FormField } from "./types";
 
 interface Props {
-  formSections: FormSection[];
+  formFields: FormField[];
   initialValues: Record<string, unknown>;
   schema: Yup.ObjectSchema<AnyObject>;
 }
 
 function FormikComponent(props: Props) {
-  const { formSections, initialValues, schema } = props;
+  const { formFields, initialValues, schema } = props;
   const history = useHistory();
+
+  let previousSection: string;
 
   return (
     <div className={Style.formikForm}>
@@ -30,19 +31,28 @@ function FormikComponent(props: Props) {
         }}
       >
         <Form>
-          {formSections.map((formSection) => (
-            <div key={formSection.id} className={Style.formField}>
-              <h2 className={Style.formFieldHeader}>{formSection.label}</h2>
-              <div>
-                {formSection.formFields.map((formField) => (
+          {formFields.map((formField) => {
+            if (
+              formField.sectionTitle &&
+              formField.sectionTitle !== previousSection
+            ) {
+              previousSection = formField.sectionTitle;
+              return (
+                <>
+                  <h2 className={Style.formFieldHeader}>
+                    {formField.sectionTitle}
+                  </h2>
                   <FieldComponent key={formField.name} formField={formField} />
-                ))}
-              </div>
-            </div>
-          ))}
-        <button type="submit" className={Style.submit}>
+                </>
+              );
+            }
+            return (
+              <FieldComponent key={formField.name} formField={formField} />
+            );
+          })}
+          <button type="submit" className={Style.submit}>
             Submit
-          </button>       
+          </button>
         </Form>
       </Formik>
     </div>
